@@ -5,6 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"path"
+	"runtime"
 	"strings"
 )
 
@@ -50,8 +52,17 @@ func showTodoList() {
 	}
 }
 
+func getDataFilePath() string {
+	var fileDirPath string
+	if runtime.GOOS == "linux" {
+		fileDirPath = "/home/"
+	}
+
+	return path.Join(fileDirPath, FILENAME)
+}
+
 func loadFile() bool {
-	bytes, err := os.ReadFile(FILENAME)
+	bytes, err := os.ReadFile(getDataFilePath())
 	if err != nil {
 		fmt.Printf("データ読み込みエラー(%s)", err.Error())
 		return false
@@ -73,7 +84,7 @@ func saveFile(todos TodoList) bool {
 		return false
 	}
 
-	fp, err := os.Create(FILENAME)
+	fp, err := os.Create(getDataFilePath())
 	if err != nil {
 		fmt.Printf("ファイルOPENエラー(%s)", err.Error())
 		return false
