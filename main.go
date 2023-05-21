@@ -62,7 +62,13 @@ func getDataFilePath() string {
 }
 
 func loadFile() bool {
-	bytes, err := os.ReadFile(getDataFilePath())
+	filePath := getDataFilePath()
+	_, err := os.Stat(filePath)
+	if err != nil {
+		saveFile(TodoList{})
+	}
+
+	bytes, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Printf("データ読み込みエラー(%s)", err.Error())
 		return false
